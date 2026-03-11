@@ -173,7 +173,7 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
           <span
             style={{ fontSize: "7pt", color: "#d1d5db", letterSpacing: "3px" }}
           >
-            ats_resume_maker.vercel.app
+            ats-resume-maker-delta.vercel.app
           </span>
         </div>
 
