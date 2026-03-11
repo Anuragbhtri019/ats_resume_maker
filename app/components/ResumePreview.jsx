@@ -33,9 +33,16 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
     [ref],
   );
 
+  const activeElementRef = useRef(null);
+
+  const cancelBlur = useCallback(() => {
+    clearTimeout(blurTimeout.current);
+  }, []);
+
   const handleFieldFocus = useCallback((field, element) => {
     clearTimeout(blurTimeout.current);
     setActiveField(field);
+    activeElementRef.current = element;
     const rect = element.getBoundingClientRect();
     setToolbarRect(rect);
     setToolbarVisible(true);
@@ -65,7 +72,8 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
     blurTimeout.current = setTimeout(() => {
       setToolbarVisible(false);
       setActiveField(null);
-    }, 200);
+      activeElementRef.current = null;
+    }, 300);
   }, []);
 
   // Sync content from state → DOM (skip actively edited field)
@@ -130,7 +138,12 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
 
   return (
     <>
-      <RichTextToolbar targetRect={toolbarRect} visible={toolbarVisible} />
+      <RichTextToolbar
+        targetRect={toolbarRect}
+        visible={toolbarVisible}
+        cancelBlur={cancelBlur}
+        activeElementRef={activeElementRef}
+      />
 
       {/* A4 page — inline styles for pixel-perfect export */}
       <div
