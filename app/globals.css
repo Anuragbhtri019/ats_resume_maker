@@ -1,26 +1,207 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-purple-primary: #6b21a8;
+  --color-purple-dark: #581c87;
+  --color-purple-light: #7c3aed;
+  --color-purple-50: #faf5ff;
+  --color-background: #ffffff;
+  --color-foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #eef2f7;
+  color: #171717;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
+}
+
+/* Right panel scrollbar */
+.bg-gray-50::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+/* ContentEditable focus styles */
+[contenteditable="true"]:focus {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+  border-radius: 3px;
+  background: rgba(167, 139, 250, 0.04);
+}
+[contenteditable="true"]:hover {
+  outline: 1px dashed #c4b5fd;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Smooth animations */
+.transition-smooth {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Print styles */
+@media print {
+  body {
+    overflow: visible;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Resume page styling — force hex colors for html2canvas compatibility (no oklch) */
+.resume-page {
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  /* Override Tailwind oklch grays with hex equivalents */
+  --tw-text-opacity: 1;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-white: #ffffff;
+  --color-black: #000000;
+}
+.resume-page,
+.resume-page * {
+  color: inherit;
+  border-color: #1f2937;
+}
+.resume-page .text-gray-900 {
+  color: #111827 !important;
+}
+.resume-page .text-gray-800 {
+  color: #1f2937 !important;
+}
+.resume-page .text-gray-700 {
+  color: #374151 !important;
+}
+.resume-page .text-gray-600 {
+  color: #4b5563 !important;
+}
+.resume-page .text-gray-500 {
+  color: #6b7280 !important;
+}
+.resume-page .text-gray-400 {
+  color: #9ca3af !important;
+}
+.resume-page .text-gray-300 {
+  color: #d1d5db !important;
+}
+.resume-page .border-gray-800 {
+  border-color: #1f2937 !important;
+}
+.resume-page .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+.resume-page .bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Input styling for left panel — dark indigo theme */
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(129, 140, 248, 0.15);
+  font-size: 13px;
+  color: #e2e8f0;
+  background: rgba(30, 27, 75, 0.5);
+  outline: none;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+.form-input:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+  border-color: #818cf8;
+}
+.form-input::placeholder {
+  color: #64748b;
+}
+/* Native select option styling */
+.form-input option {
+  background: #1e1b4b;
+  color: #e2e8f0;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(129, 140, 248, 0.15);
+  font-size: 13px;
+  color: #e2e8f0;
+  background: rgba(30, 27, 75, 0.5);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+.form-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+  border-color: #818cf8;
+}
+
+/* Add button styling for left panel */
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(129, 140, 248, 0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add:hover {
+  background: rgba(99, 102, 241, 0.35);
+}
+.btn-add-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #818cf8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 0.2s;
+}
+.btn-add-sm:hover {
+  color: #a5b4fc;
 }
