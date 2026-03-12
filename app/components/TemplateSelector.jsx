@@ -24,6 +24,11 @@ export default function TemplateSelector() {
           </option>
         ))}
       </select>
+      {TEMPLATES[data.templateType]?.description && (
+        <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', paddingLeft: '2px' }}>
+          {TEMPLATES[data.templateType].description}
+        </p>
+      )}
     </div>
   );
 }

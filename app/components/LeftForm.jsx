@@ -28,7 +28,7 @@ import {
   Trophy,
   Languages,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, memo } from "react";
 import { saveAs } from "file-saver";
 
 // Section icon mapping
@@ -48,34 +48,16 @@ const SECTION_ICONS = {
 };
 
 // Collapsible section wrapper
-function Section({ title, icon: Icon, children, defaultOpen = true }) {
+const Section = memo(function Section({
+  title,
+  icon: Icon,
+  children,
+  defaultOpen = true,
+}) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="mb-4">
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          color: "#e0e7ff",
-          fontWeight: 600,
-          fontSize: "13px",
-          padding: "10px 14px",
-          borderRadius: "10px",
-          background: "rgba(99, 102, 241, 0.18)",
-          border: "1px solid rgba(129, 140, 248, 0.15)",
-          cursor: "pointer",
-          transition: "background 0.2s",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.background = "rgba(99, 102, 241, 0.28)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.background = "rgba(99, 102, 241, 0.18)")
-        }
-      >
+      <button onClick={() => setOpen(!open)} className="btn-section-toggle">
         <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           {Icon && <Icon size={15} />}
           {title}
@@ -85,7 +67,7 @@ function Section({ title, icon: Icon, children, defaultOpen = true }) {
       {open && <div className="mt-3 space-y-3 px-1">{children}</div>}
     </div>
   );
-}
+});
 
 export default function LeftForm() {
   const {
@@ -159,26 +141,7 @@ export default function LeftForm() {
       >
         <button
           onClick={() => fileInputRef.current?.click()}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(99, 102, 241, 0.25)",
-            color: "#c7d2fe",
-            padding: "8px 16px",
-            borderRadius: "10px",
-            fontSize: "13px",
-            fontWeight: 500,
-            border: "1px solid rgba(129, 140, 248, 0.2)",
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.4)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.25)")
-          }
+          className="btn-action"
         >
           <Upload size={16} />
           Load Data
@@ -190,54 +153,13 @@ export default function LeftForm() {
           onChange={handleLoad}
           className="hidden"
         />
-        <button
-          onClick={handleSave}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(99, 102, 241, 0.25)",
-            color: "#c7d2fe",
-            padding: "8px 16px",
-            borderRadius: "10px",
-            fontSize: "13px",
-            fontWeight: 500,
-            border: "1px solid rgba(129, 140, 248, 0.2)",
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.4)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.25)")
-          }
-        >
+        <button onClick={handleSave} className="btn-action">
           <Download size={16} />
           Save Data
         </button>
         <button
           onClick={handleReset}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(99, 102, 241, 0.25)",
-            color: "#c7d2fe",
-            padding: "8px 12px",
-            borderRadius: "10px",
-            fontSize: "13px",
-            fontWeight: 500,
-            border: "1px solid rgba(129, 140, 248, 0.2)",
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.4)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.background = "rgba(99, 102, 241, 0.25)")
-          }
+          className="btn-action-icon"
           title="Reset to Dummy Data"
         >
           <RotateCcw size={16} />
@@ -380,13 +302,7 @@ export default function LeftForm() {
                   {data.experience.map((exp, i) => (
                     <div
                       key={i}
-                      style={{
-                        background: "rgba(99, 102, 241, 0.08)",
-                        border: "1px solid rgba(129, 140, 248, 0.1)",
-                        borderRadius: "10px",
-                        padding: "12px",
-                      }}
-                      className="space-y-2"
+                      className="section-card space-y-2"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
@@ -514,13 +430,7 @@ export default function LeftForm() {
                   {data.education.map((edu, i) => (
                     <div
                       key={i}
-                      style={{
-                        background: "rgba(99, 102, 241, 0.08)",
-                        border: "1px solid rgba(129, 140, 248, 0.1)",
-                        borderRadius: "10px",
-                        padding: "12px",
-                      }}
-                      className="space-y-2"
+                      className="section-card space-y-2"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
@@ -679,13 +589,7 @@ export default function LeftForm() {
                   {(data.projects || []).map((proj, i) => (
                     <div
                       key={i}
-                      style={{
-                        background: "rgba(99, 102, 241, 0.08)",
-                        border: "1px solid rgba(129, 140, 248, 0.1)",
-                        borderRadius: "10px",
-                        padding: "12px",
-                      }}
-                      className="space-y-2"
+                      className="section-card space-y-2"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
@@ -761,13 +665,7 @@ export default function LeftForm() {
                   {(data.campaigns || []).map((camp, i) => (
                     <div
                       key={i}
-                      style={{
-                        background: "rgba(99, 102, 241, 0.08)",
-                        border: "1px solid rgba(129, 140, 248, 0.1)",
-                        borderRadius: "10px",
-                        padding: "12px",
-                      }}
-                      className="space-y-2"
+                      className="section-card space-y-2"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
@@ -874,13 +772,7 @@ export default function LeftForm() {
                   {(data.publications || []).map((pub, i) => (
                     <div
                       key={i}
-                      style={{
-                        background: "rgba(99, 102, 241, 0.08)",
-                        border: "1px solid rgba(129, 140, 248, 0.1)",
-                        borderRadius: "10px",
-                        padding: "12px",
-                      }}
-                      className="space-y-2"
+                      className="section-card space-y-2"
                     >
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">

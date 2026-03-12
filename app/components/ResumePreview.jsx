@@ -3,7 +3,14 @@
 import { useResume } from "@/app/lib/ResumeContext";
 import { TEMPLATES } from "@/app/lib/templates";
 import RichTextToolbar from "./RichTextToolbar";
-import { useState, useRef, useCallback, forwardRef, useEffect } from "react";
+import {
+  useState,
+  useRef,
+  useCallback,
+  forwardRef,
+  useEffect,
+  useMemo,
+} from "react";
 import { Phone, Mail, MapPin, Github, Linkedin, Globe } from "lucide-react";
 
 const SOCIAL_ICONS = { github: Github, linkedin: Linkedin, website: Globe };
@@ -92,22 +99,38 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
       if (Array.isArray(val)) val = val.join(", ");
       if (el.innerText !== (val || "")) el.innerText = val || "";
     });
-  });
+  }, [data, activeField]);
 
-  const activeSections = TEMPLATES[data.templateType]?.sections || [];
-  const leftSections = [
-    "education",
-    "technicalSkills",
-    "softSkills",
-    "additionalSkills",
-    "languages",
-    "certifications",
-    "publications",
-    "portfolioLinks",
-  ];
-  const rightSections = ["experience", "projects", "campaigns", "achievements"];
-  const leftActive = activeSections.filter((s) => leftSections.includes(s));
-  const rightActive = activeSections.filter((s) => rightSections.includes(s));
+  const leftSections = useMemo(
+    () => [
+      "education",
+      "technicalSkills",
+      "softSkills",
+      "additionalSkills",
+      "languages",
+      "certifications",
+      "publications",
+      "portfolioLinks",
+    ],
+    [],
+  );
+  const rightSections = useMemo(
+    () => ["experience", "projects", "campaigns", "achievements"],
+    [],
+  );
+
+  const activeSections = useMemo(
+    () => TEMPLATES[data.templateType]?.sections || [],
+    [data.templateType],
+  );
+  const leftActive = useMemo(
+    () => activeSections.filter((s) => leftSections.includes(s)),
+    [activeSections, leftSections],
+  );
+  const rightActive = useMemo(
+    () => activeSections.filter((s) => rightSections.includes(s)),
+    [activeSections, rightSections],
+  );
 
   // Shared contentEditable props helper
   const editProps = (field) => ({
@@ -123,18 +146,25 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
   });
 
   // Reusable inline styles (so html2canvas reads them correctly — no oklch)
-  const heading = {
-    fontSize: "10.5pt",
-    color: "#111827",
-    borderBottom: "2px solid #1f2937",
-    paddingBottom: "4px",
-    marginBottom: "8px",
-    textTransform: "uppercase",
-    letterSpacing: "1.5px",
-    fontWeight: "bold",
-  };
-  const bodyText = { fontSize: "9.5pt", color: "#374151", lineHeight: "1.55" };
-  const subLabel = { fontSize: "8.5pt", color: "#6b7280" };
+  // Memoized to avoid recreating on every render
+  const heading = useMemo(
+    () => ({
+      fontSize: "10.5pt",
+      color: "#111827",
+      borderBottom: "2px solid #1f2937",
+      paddingBottom: "4px",
+      marginBottom: "8px",
+      textTransform: "uppercase",
+      letterSpacing: "1.5px",
+      fontWeight: "bold",
+    }),
+    [],
+  );
+  const bodyText = useMemo(
+    () => ({ fontSize: "9.5pt", color: "#374151", lineHeight: "1.55" }),
+    [],
+  );
+  const subLabel = useMemo(() => ({ fontSize: "8.5pt", color: "#6b7280" }), []);
 
   return (
     <>

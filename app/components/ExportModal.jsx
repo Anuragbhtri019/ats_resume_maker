@@ -3,15 +3,23 @@
 import { useResume } from '@/app/lib/ResumeContext';
 import { toast } from 'sonner';
 import { FileText, FileSpreadsheet, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function ExportModal({ open, onClose, previewRef }) {
   const { data } = useResume();
   const [exporting, setExporting] = useState(false);
 
-  if (!open) return null;
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape' && !exporting) onClose();
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, onClose, exporting]);
 
-  const handleExportPdf = async () => {
+  const handleExportPdf = useCallback(async () => {
     if (!previewRef?.current) {
       toast.error('Preview not ready');
       return;
@@ -28,9 +36,9 @@ export default function ExportModal({ open, onClose, previewRef }) {
     } finally {
       setExporting(false);
     }
-  };
+  }, [previewRef, data.personal.name, onClose]);
 
-  const handleExportDocx = async () => {
+  const handleExportDocx = useCallback(async () => {
     if (!previewRef?.current) {
       toast.error('Preview not ready');
       return;
@@ -47,20 +55,23 @@ export default function ExportModal({ open, onClose, previewRef }) {
     } finally {
       setExporting(false);
     }
-  };
+  }, [previewRef, data.personal.name, onClose]);
+
+  if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm modal-backdrop"
+      onClick={exporting ? undefined : onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative"
+        className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          disabled={exporting}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
         >
           <X size={20} />
         </button>
@@ -74,9 +85,9 @@ export default function ExportModal({ open, onClose, previewRef }) {
           <button
             onClick={handleExportPdf}
             disabled={exporting}
-            className="flex-1 flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="export-card"
           >
-            <FileText size={32} className="text-red-500" />
+            <FileText size={32} style={{ color: '#ef4444' }} />
             <span className="font-semibold text-gray-900">PDF</span>
             <span className="text-xs text-gray-500">Pixel-perfect output</span>
           </button>
@@ -84,16 +95,17 @@ export default function ExportModal({ open, onClose, previewRef }) {
           <button
             onClick={handleExportDocx}
             disabled={exporting}
-            className="flex-1 flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="export-card"
           >
-            <FileSpreadsheet size={32} className="text-blue-500" />
+            <FileSpreadsheet size={32} style={{ color: '#3b82f6' }} />
             <span className="font-semibold text-gray-900">.doc</span>
             <span className="text-xs text-gray-500">Editable document</span>
           </button>
         </div>
 
         {exporting && (
-          <div className="mt-4 text-center text-sm text-purple-600 animate-pulse">
+          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-purple-600">
+            <span className="export-spinner" />
             Generating file...
           </div>
         )}
@@ -101,3 +113,4 @@ export default function ExportModal({ open, onClose, previewRef }) {
     </div>
   );
 }
+  

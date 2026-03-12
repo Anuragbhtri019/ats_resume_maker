@@ -1,72 +1,70 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useMemo } from 'react';
 import { DUMMY_DATA } from './dummyData';
 
 const ResumeContext = createContext(null);
 
+// Immutable update helper — performs structural sharing instead of deep clone
+function setNestedValue(obj, keys, value) {
+  if (keys.length === 0) return value;
+  const [head, ...rest] = keys;
+  const key = isNaN(head) ? head : Number(head);
+  const child = obj[key];
+  const updated = setNestedValue(child, rest, value);
+  if (Array.isArray(obj)) {
+    const copy = [...obj];
+    copy[key] = updated;
+    return copy;
+  }
+  return { ...obj, [key]: updated };
+}
+
 export function ResumeProvider({ children }) {
-  const [data, setData] = useState(() => JSON.parse(JSON.stringify(DUMMY_DATA)));
-  // Track which field is being edited on preview (to avoid cursor jumping)
+  const [data, setData] = useState(() => structuredClone(DUMMY_DATA));
   const activePreviewField = useRef(null);
 
   // Generic field updater using dot-path: "personal.name", "experience.0.company"
   const updateField = useCallback((path, value) => {
-    setData((prev) => {
-      const next = JSON.parse(JSON.stringify(prev));
-      const keys = path.split('.');
-      let obj = next;
-      for (let i = 0; i < keys.length - 1; i++) {
-        const k = isNaN(keys[i]) ? keys[i] : Number(keys[i]);
-        obj = obj[k];
-      }
-      const lastKey = isNaN(keys[keys.length - 1]) ? keys[keys.length - 1] : Number(keys[keys.length - 1]);
-      obj[lastKey] = value;
-      return next;
-    });
+    const keys = path.split('.');
+    setData((prev) => setNestedValue(prev, keys, value));
   }, []);
 
   // Add item to an array section
   const addItem = useCallback((section, template) => {
     setData((prev) => {
-      const next = JSON.parse(JSON.stringify(prev));
-      if (Array.isArray(next[section])) {
-        next[section].push(template);
-      }
-      return next;
+      if (!Array.isArray(prev[section])) return prev;
+      return { ...prev, [section]: [...prev[section], typeof template === 'object' ? { ...template } : template] };
     });
   }, []);
 
   // Remove item from an array section
   const removeItem = useCallback((section, index) => {
     setData((prev) => {
-      const next = JSON.parse(JSON.stringify(prev));
-      if (Array.isArray(next[section])) {
-        next[section].splice(index, 1);
-      }
-      return next;
+      if (!Array.isArray(prev[section])) return prev;
+      return { ...prev, [section]: prev[section].filter((_, i) => i !== index) };
     });
   }, []);
 
   // Add bullet to experience/project
   const addBullet = useCallback((section, index) => {
     setData((prev) => {
-      const next = JSON.parse(JSON.stringify(prev));
-      if (next[section]?.[index]?.bullets) {
-        next[section][index].bullets.push('');
-      }
-      return next;
+      const item = prev[section]?.[index];
+      if (!item?.bullets) return prev;
+      const newItems = [...prev[section]];
+      newItems[index] = { ...item, bullets: [...item.bullets, ''] };
+      return { ...prev, [section]: newItems };
     });
   }, []);
 
   // Remove bullet
   const removeBullet = useCallback((section, itemIndex, bulletIndex) => {
     setData((prev) => {
-      const next = JSON.parse(JSON.stringify(prev));
-      if (next[section]?.[itemIndex]?.bullets) {
-        next[section][itemIndex].bullets.splice(bulletIndex, 1);
-      }
-      return next;
+      const item = prev[section]?.[itemIndex];
+      if (!item?.bullets) return prev;
+      const newItems = [...prev[section]];
+      newItems[itemIndex] = { ...item, bullets: item.bullets.filter((_, i) => i !== bulletIndex) };
+      return { ...prev, [section]: newItems };
     });
   }, []);
 
@@ -92,10 +90,11 @@ export function ResumeProvider({ children }) {
     setData((prev) => ({ ...prev, templateType: type }));
   }, []);
 
-  // Load data from JSON
+  // Load data from JSON with validation
   const loadData = useCallback((json) => {
     try {
       const parsed = typeof json === 'string' ? JSON.parse(json) : json;
+      if (!parsed || typeof parsed !== 'object' || !parsed.personal) return false;
       setData(parsed);
       return true;
     } catch {
@@ -105,7 +104,7 @@ export function ResumeProvider({ children }) {
 
   // Reset to dummy data
   const resetToDummy = useCallback(() => {
-    setData(JSON.parse(JSON.stringify(DUMMY_DATA)));
+    setData(structuredClone(DUMMY_DATA));
   }, []);
 
   // Update skills array (comma-separated string → array)
@@ -116,7 +115,7 @@ export function ResumeProvider({ children }) {
     }));
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     data,
     setData,
     updateField,
@@ -131,7 +130,7 @@ export function ResumeProvider({ children }) {
     resetToDummy,
     updateSkills,
     activePreviewField,
-  };
+  }), [data, setData, updateField, addItem, removeItem, addBullet, removeBullet, addSocial, removeSocial, setTemplateType, loadData, resetToDummy, updateSkills]);
 
   return <ResumeContext.Provider value={value}>{children}</ResumeContext.Provider>;
 }
