@@ -134,8 +134,9 @@ export default function LeftForm() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "12px",
-          padding: "16px",
+          flexWrap: "wrap",
+          gap: "10px",
+          padding: "12px 16px",
           borderBottom: "1px solid rgba(129, 140, 248, 0.15)",
         }}
       >

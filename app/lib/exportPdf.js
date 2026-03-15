@@ -15,6 +15,15 @@ export async function exportToPdf(previewElement, name) {
     useCORS: true,
     letterRendering: true,
     onclone: (doc, el) => {
+      // Reset any responsive zoom/transform applied by ancestor wrappers
+      // so the capture is always at the natural A4 size
+      let node = el.parentElement;
+      while (node && node !== doc.documentElement) {
+        node.style.zoom = '1';
+        node.style.transform = 'none';
+        node = node.parentElement;
+      }
+
       // Remove minHeight so canvas matches actual content height
       el.style.minHeight = "unset";
       el.style.height = "auto";

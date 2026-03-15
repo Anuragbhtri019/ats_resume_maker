@@ -28,8 +28,10 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
   const [toolbarVisible, setToolbarVisible] = useState(false);
   const [toolbarRect, setToolbarRect] = useState(null);
   const [activeField, setActiveField] = useState(null);
+  const [resumeScale, setResumeScale] = useState(1);
   const blurTimeout = useRef(null);
   const innerRef = useRef(null);
+  const scaleWrapRef = useRef(null);
 
   const setRef = useCallback(
     (node) => {
@@ -81,6 +83,19 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
       setActiveField(null);
       activeElementRef.current = null;
     }, 300);
+  }, []);
+
+  // Compute scale to fit A4 (794px) inside the container
+  useEffect(() => {
+    const A4_PX = 794;
+    const el = scaleWrapRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      setResumeScale(w >= A4_PX ? 1 : +(w / A4_PX).toFixed(4));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   // Sync content from state → DOM (skip actively edited field)
@@ -175,444 +190,472 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
         activeElementRef={activeElementRef}
       />
 
-      {/* A4 page — inline styles for pixel-perfect export */}
-      <div
-        ref={setRef}
-        className="resume-page"
-        style={{
-          background: "#ffffff",
-          width: "210mm",
-          minHeight: "297mm",
-          margin: "0 auto",
-          padding: "0",
-          fontFamily: '"Segoe UI", Arial, Helvetica, sans-serif',
-          fontSize: "10pt",
-          lineHeight: "1.45",
-          color: "#111827",
-          boxShadow: "0 4px 30px rgba(0,0,0,0.10)",
-        }}
-      >
-        {/* Watermark */}
-        <div
-          style={{
-            textAlign: "center",
-            paddingTop: "12px",
-            paddingBottom: "0",
-          }}
-        >
-          <span
-            style={{ fontSize: "7pt", color: "#d1d5db", letterSpacing: "3px" }}
-          >
-            ats-resume-maker-delta.vercel.app
-          </span>
-        </div>
-
-        {/* Header */}
-        <div style={{ textAlign: "center", padding: "10px 50px 16px" }}>
+      {/* Scale wrapper — zooms the A4 page to fit smaller screens */}
+      <div ref={scaleWrapRef} style={{ width: "100%" }}>
+        <div className="resume-scale-zoom" style={{ zoom: resumeScale }}>
+          {/* A4 page — inline styles for pixel-perfect export */}
           <div
-            {...editProps("personal.name")}
+            ref={setRef}
+            className="resume-page"
             style={{
-              fontSize: "24pt",
-              fontWeight: "bold",
-              letterSpacing: "2px",
+              background: "#ffffff",
+              width: "210mm",
+              minHeight: "297mm",
+              margin: "0 auto",
+              padding: "0",
+              fontFamily: '"Segoe UI", Arial, Helvetica, sans-serif',
+              fontSize: "10pt",
+              lineHeight: "1.45",
               color: "#111827",
-            }}
-          />
-          <div
-            {...editProps("personal.title")}
-            style={{ fontSize: "12pt", color: "#4b5563", marginTop: "2px" }}
-          />
-
-          {/* Contact row */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "22px",
-              marginTop: "12px",
-              fontSize: "9.5pt",
-              color: "#374151",
-              flexWrap: "wrap",
+              boxShadow: "0 4px 30px rgba(0,0,0,0.10)",
             }}
           >
-            {data.personal.phone && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
-                <Phone size={13} color="#374151" /> {data.personal.phone}
-              </span>
-            )}
-            {data.personal.email && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
-                <Mail size={13} color="#374151" /> {data.personal.email}
-              </span>
-            )}
-            {data.personal.location && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
-                <MapPin size={13} color="#374151" /> {data.personal.location}
-              </span>
-            )}
-          </div>
-
-          {/* Social */}
-          {data.socialMedia.length > 0 && (
+            {/* Watermark */}
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "18px",
-                marginTop: "6px",
-                fontSize: "9pt",
-                color: "#6b7280",
-                flexWrap: "wrap",
+                textAlign: "center",
+                paddingTop: "12px",
+                paddingBottom: "0",
               }}
             >
-              {data.socialMedia.map((social, i) => {
-                const Icon = getSocialIcon(social.platform);
-                return (
+              <span
+                style={{
+                  fontSize: "7pt",
+                  color: "#d1d5db",
+                  letterSpacing: "3px",
+                }}
+              >
+                ats-resume-maker-delta.vercel.app
+              </span>
+            </div>
+
+            {/* Header */}
+            <div style={{ textAlign: "center", padding: "10px 50px 16px" }}>
+              <div
+                {...editProps("personal.name")}
+                style={{
+                  fontSize: "24pt",
+                  fontWeight: "bold",
+                  letterSpacing: "2px",
+                  color: "#111827",
+                }}
+              />
+              <div
+                {...editProps("personal.title")}
+                style={{ fontSize: "12pt", color: "#4b5563", marginTop: "2px" }}
+              />
+
+              {/* Contact row */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "22px",
+                  marginTop: "12px",
+                  fontSize: "9.5pt",
+                  color: "#374151",
+                  flexWrap: "wrap",
+                }}
+              >
+                {data.personal.phone && (
                   <span
-                    key={i}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
-                      gap: "4px",
+                      gap: "5px",
                     }}
                   >
-                    <Icon size={12} color="#6b7280" /> {social.url}
+                    <Phone size={13} color="#374151" /> {data.personal.phone}
                   </span>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                )}
+                {data.personal.email && (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <Mail size={13} color="#374151" /> {data.personal.email}
+                  </span>
+                )}
+                {data.personal.location && (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <MapPin size={13} color="#374151" />{" "}
+                    {data.personal.location}
+                  </span>
+                )}
+              </div>
 
-        {/* Divider */}
-        <div style={{ borderTop: "1px solid #e5e7eb", margin: "0 35px 4px" }} />
-
-        {/* Body two-column */}
-        <div
-          style={{ display: "flex", padding: "12px 35px 35px", gap: "28px" }}
-        >
-          {/* LEFT COLUMN — 36% */}
-          <div
-            style={{
-              width: "36%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {/* Summary */}
-            <div>
-              <h3 style={heading}>Summary</h3>
-              <div {...editProps("summary")} style={bodyText} />
-            </div>
-
-            {leftActive.map((key) => {
-              switch (key) {
-                case "education":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Education</h3>
-                      {data.education.map((edu, i) => (
-                        <div key={i} style={{ marginBottom: "10px" }}>
-                          <div
-                            {...editProps(`education.${i}.school`)}
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "9.5pt",
-                              color: "#111827",
-                            }}
-                          />
-                          <div
-                            {...editProps(`education.${i}.degree`)}
-                            style={{ fontSize: "9pt", color: "#374151" }}
-                          />
-                          <div style={subLabel}>
-                            {edu.startDate} — {edu.endDate}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                case "technicalSkills":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Technical Skills</h3>
-                      <div {...editProps("technicalSkills")} style={bodyText} />
-                    </div>
-                  );
-                case "softSkills":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Soft Skills</h3>
-                      <div {...editProps("softSkills")} style={bodyText} />
-                    </div>
-                  );
-                case "additionalSkills":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Additional Skills</h3>
-                      <div
-                        {...editProps("additionalSkills")}
-                        style={bodyText}
-                      />
-                    </div>
-                  );
-                case "languages":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Languages</h3>
-                      <div {...editProps("languages")} style={bodyText} />
-                    </div>
-                  );
-                case "certifications":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Certifications</h3>
-                      <ul
+              {/* Social */}
+              {data.socialMedia.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "18px",
+                    marginTop: "6px",
+                    fontSize: "9pt",
+                    color: "#6b7280",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {data.socialMedia.map((social, i) => {
+                    const Icon = getSocialIcon(social.platform);
+                    return (
+                      <span
+                        key={i}
                         style={{
-                          listStyleType: "none",
-                          paddingLeft: "4px",
-                          ...bodyText,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "4px",
                         }}
                       >
-                        {(data.certifications || []).map((c, i) => (
-                          <li key={i} style={{ marginBottom: "3px" }}>
-                            <span style={{ marginRight: "6px" }}>
-                              {"\u2022"}
-                            </span>
-                            {c}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                case "publications":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Publications</h3>
-                      {(data.publications || []).map((pub, i) => (
-                        <div key={i} style={{ marginBottom: "6px" }}>
-                          <div
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "9.5pt",
-                              color: "#111827",
-                            }}
-                          >
-                            {pub.title}
-                          </div>
-                          <div style={subLabel}>
-                            {pub.journal} — {pub.date}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                case "portfolioLinks":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Portfolio Links</h3>
-                      {(data.portfolioLinks || []).map((pl, i) => (
-                        <div key={i} style={bodyText}>
-                          <span style={{ fontWeight: "600" }}>{pl.label}:</span>{" "}
-                          {pl.url}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                default:
-                  return null;
-              }
-            })}
-          </div>
+                        <Icon size={12} color="#6b7280" /> {social.url}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
-          {/* RIGHT COLUMN — 64% */}
-          <div
-            style={{
-              width: "64%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {rightActive.map((key) => {
-              switch (key) {
-                case "experience":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Work Experience</h3>
-                      {data.experience.map((exp, i) => (
-                        <div key={i} style={{ marginBottom: "16px" }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "baseline",
-                            }}
-                          >
-                            <div
-                              {...editProps(`experience.${i}.company`)}
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: "10.5pt",
-                                color: "#111827",
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontSize: "8.5pt",
-                                color: "#6b7280",
-                                whiteSpace: "nowrap",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {exp.startDate} — {exp.endDate}
-                            </span>
-                          </div>
-                          <div
-                            {...editProps(`experience.${i}.role`)}
-                            style={{
-                              fontSize: "9.5pt",
-                              color: "#374151",
-                              fontStyle: "italic",
-                            }}
-                          />
-                          {exp.description && (
-                            <div
-                              {...editProps(`experience.${i}.description`)}
-                              style={{ ...bodyText, marginTop: "4px" }}
-                            />
-                          )}
-                          {exp.bullets.length > 0 && (
-                            <ul
-                              style={{
-                                listStyleType: "none",
-                                paddingLeft: "4px",
-                                marginTop: "6px",
-                              }}
-                            >
-                              {exp.bullets.map((b, bi) => (
-                                <li
-                                  key={bi}
-                                  style={{
-                                    fontSize: "9pt",
-                                    color: "#374151",
-                                    lineHeight: "1.55",
-                                    marginBottom: "3px",
-                                  }}
-                                >
-                                  <span style={{ marginRight: "6px" }}>
-                                    {"\u2022"}
-                                  </span>
-                                  <span
-                                    {...editProps(
-                                      `experience.${i}.bullets.${bi}`,
-                                    )}
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+            {/* Divider */}
+            <div
+              style={{ borderTop: "1px solid #e5e7eb", margin: "0 35px 4px" }}
+            />
+
+            {/* Body two-column */}
+            <div
+              style={{
+                display: "flex",
+                padding: "12px 35px 35px",
+                gap: "28px",
+              }}
+            >
+              {/* LEFT COLUMN — 36% */}
+              <div
+                style={{
+                  width: "36%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                }}
+              >
+                {/* Summary */}
+                <div>
+                  <h3 style={heading}>Summary</h3>
+                  <div {...editProps("summary")} style={bodyText} />
+                </div>
+
+                {leftActive.map((key) => {
+                  switch (key) {
+                    case "education":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Education</h3>
+                          {data.education.map((edu, i) => (
+                            <div key={i} style={{ marginBottom: "10px" }}>
+                              <div
+                                {...editProps(`education.${i}.school`)}
+                                style={{
+                                  fontWeight: "bold",
+                                  fontSize: "9.5pt",
+                                  color: "#111827",
+                                }}
+                              />
+                              <div
+                                {...editProps(`education.${i}.degree`)}
+                                style={{ fontSize: "9pt", color: "#374151" }}
+                              />
+                              <div style={subLabel}>
+                                {edu.startDate} — {edu.endDate}
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  );
-                case "projects":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Projects</h3>
-                      {(data.projects || []).map((proj, i) => (
-                        <div key={i} style={{ marginBottom: "12px" }}>
+                      );
+                    case "technicalSkills":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Technical Skills</h3>
                           <div
-                            {...editProps(`projects.${i}.name`)}
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "10.5pt",
-                              color: "#111827",
-                            }}
-                          />
-                          <div
-                            {...editProps(`projects.${i}.description`)}
+                            {...editProps("technicalSkills")}
                             style={bodyText}
                           />
-                          <div style={{ ...subLabel, marginTop: "2px" }}>
-                            {proj.technologies} {proj.link && `• ${proj.link}`}
-                          </div>
                         </div>
-                      ))}
-                    </div>
-                  );
-                case "campaigns":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Campaigns</h3>
-                      {(data.campaigns || []).map((camp, i) => (
-                        <div key={i} style={{ marginBottom: "12px" }}>
+                      );
+                    case "softSkills":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Soft Skills</h3>
+                          <div {...editProps("softSkills")} style={bodyText} />
+                        </div>
+                      );
+                    case "additionalSkills":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Additional Skills</h3>
                           <div
+                            {...editProps("additionalSkills")}
+                            style={bodyText}
+                          />
+                        </div>
+                      );
+                    case "languages":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Languages</h3>
+                          <div {...editProps("languages")} style={bodyText} />
+                        </div>
+                      );
+                    case "certifications":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Certifications</h3>
+                          <ul
                             style={{
-                              fontWeight: "bold",
-                              fontSize: "10.5pt",
-                              color: "#111827",
+                              listStyleType: "none",
+                              paddingLeft: "4px",
+                              ...bodyText,
                             }}
                           >
-                            {camp.name}
-                          </div>
-                          <div style={bodyText}>{camp.description}</div>
-                          <div
+                            {(data.certifications || []).map((c, i) => (
+                              <li key={i} style={{ marginBottom: "3px" }}>
+                                <span style={{ marginRight: "6px" }}>
+                                  {"\u2022"}
+                                </span>
+                                {c}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    case "publications":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Publications</h3>
+                          {(data.publications || []).map((pub, i) => (
+                            <div key={i} style={{ marginBottom: "6px" }}>
+                              <div
+                                style={{
+                                  fontWeight: "600",
+                                  fontSize: "9.5pt",
+                                  color: "#111827",
+                                }}
+                              >
+                                {pub.title}
+                              </div>
+                              <div style={subLabel}>
+                                {pub.journal} — {pub.date}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    case "portfolioLinks":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Portfolio Links</h3>
+                          {(data.portfolioLinks || []).map((pl, i) => (
+                            <div key={i} style={bodyText}>
+                              <span style={{ fontWeight: "600" }}>
+                                {pl.label}:
+                              </span>{" "}
+                              {pl.url}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+
+              {/* RIGHT COLUMN — 64% */}
+              <div
+                style={{
+                  width: "64%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                }}
+              >
+                {rightActive.map((key) => {
+                  switch (key) {
+                    case "experience":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Work Experience</h3>
+                          {data.experience.map((exp, i) => (
+                            <div key={i} style={{ marginBottom: "16px" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "baseline",
+                                }}
+                              >
+                                <div
+                                  {...editProps(`experience.${i}.company`)}
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: "10.5pt",
+                                    color: "#111827",
+                                  }}
+                                />
+                                <span
+                                  style={{
+                                    fontSize: "8.5pt",
+                                    color: "#6b7280",
+                                    whiteSpace: "nowrap",
+                                    marginLeft: "10px",
+                                  }}
+                                >
+                                  {exp.startDate} — {exp.endDate}
+                                </span>
+                              </div>
+                              <div
+                                {...editProps(`experience.${i}.role`)}
+                                style={{
+                                  fontSize: "9.5pt",
+                                  color: "#374151",
+                                  fontStyle: "italic",
+                                }}
+                              />
+                              {exp.description && (
+                                <div
+                                  {...editProps(`experience.${i}.description`)}
+                                  style={{ ...bodyText, marginTop: "4px" }}
+                                />
+                              )}
+                              {exp.bullets.length > 0 && (
+                                <ul
+                                  style={{
+                                    listStyleType: "none",
+                                    paddingLeft: "4px",
+                                    marginTop: "6px",
+                                  }}
+                                >
+                                  {exp.bullets.map((b, bi) => (
+                                    <li
+                                      key={bi}
+                                      style={{
+                                        fontSize: "9pt",
+                                        color: "#374151",
+                                        lineHeight: "1.55",
+                                        marginBottom: "3px",
+                                      }}
+                                    >
+                                      <span style={{ marginRight: "6px" }}>
+                                        {"\u2022"}
+                                      </span>
+                                      <span
+                                        {...editProps(
+                                          `experience.${i}.bullets.${bi}`,
+                                        )}
+                                      />
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    case "projects":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Projects</h3>
+                          {(data.projects || []).map((proj, i) => (
+                            <div key={i} style={{ marginBottom: "12px" }}>
+                              <div
+                                {...editProps(`projects.${i}.name`)}
+                                style={{
+                                  fontWeight: "bold",
+                                  fontSize: "10.5pt",
+                                  color: "#111827",
+                                }}
+                              />
+                              <div
+                                {...editProps(`projects.${i}.description`)}
+                                style={bodyText}
+                              />
+                              <div style={{ ...subLabel, marginTop: "2px" }}>
+                                {proj.technologies}{" "}
+                                {proj.link && `• ${proj.link}`}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    case "campaigns":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Campaigns</h3>
+                          {(data.campaigns || []).map((camp, i) => (
+                            <div key={i} style={{ marginBottom: "12px" }}>
+                              <div
+                                style={{
+                                  fontWeight: "bold",
+                                  fontSize: "10.5pt",
+                                  color: "#111827",
+                                }}
+                              >
+                                {camp.name}
+                              </div>
+                              <div style={bodyText}>{camp.description}</div>
+                              <div
+                                style={{
+                                  ...subLabel,
+                                  fontStyle: "italic",
+                                  marginTop: "2px",
+                                }}
+                              >
+                                {camp.metrics}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    case "achievements":
+                      return (
+                        <div key={key}>
+                          <h3 style={heading}>Achievements</h3>
+                          <ul
                             style={{
-                              ...subLabel,
-                              fontStyle: "italic",
-                              marginTop: "2px",
+                              listStyleType: "none",
+                              paddingLeft: "4px",
                             }}
                           >
-                            {camp.metrics}
-                          </div>
+                            {(data.achievements || []).map((a, i) => (
+                              <li
+                                key={i}
+                                style={{ ...bodyText, marginBottom: "4px" }}
+                              >
+                                <span style={{ marginRight: "6px" }}>
+                                  {"\u2022"}
+                                </span>
+                                {a}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                      ))}
-                    </div>
-                  );
-                case "achievements":
-                  return (
-                    <div key={key}>
-                      <h3 style={heading}>Achievements</h3>
-                      <ul style={{ listStyleType: "none", paddingLeft: "4px" }}>
-                        {(data.achievements || []).map((a, i) => (
-                          <li
-                            key={i}
-                            style={{ ...bodyText, marginBottom: "4px" }}
-                          >
-                            <span style={{ marginRight: "6px" }}>
-                              {"\u2022"}
-                            </span>
-                            {a}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                default:
-                  return null;
-              }
-            })}
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+            </div>
           </div>
+          {/* end zoom + scale wrapper */}
         </div>
       </div>
     </>

@@ -1,47 +1,83 @@
-'use client';
+"use client";
 
-import { useState, useRef, useCallback } from 'react';
-import { ResumeProvider } from '@/app/lib/ResumeContext';
-import LeftForm from '@/app/components/LeftForm';
-import ResumePreview from '@/app/components/ResumePreview';
-import ExportModal from '@/app/components/ExportModal';
-import { Download } from 'lucide-react';
+import { useState, useRef, useCallback } from "react";
+import { ResumeProvider } from "@/app/lib/ResumeContext";
+import LeftForm from "@/app/components/LeftForm";
+import ResumePreview from "@/app/components/ResumePreview";
+import ExportModal from "@/app/components/ExportModal";
+import { Download, Edit3, FileText } from "lucide-react";
 
 function ResumeBuilder() {
   const [exportOpen, setExportOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("form"); // 'form' | 'preview'
   const previewRef = useRef(null);
   const openExport = useCallback(() => setExportOpen(true), []);
   const closeExport = useCallback(() => setExportOpen(false), []);
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden">
-      {/* Left Panel — 35% */}
-      <div className="w-full lg:w-[35%] xl:w-[30%] h-[45vh] lg:h-full overflow-hidden flex-shrink-0">
-        <LeftForm />
+    <div className="flex flex-col h-dvh w-screen overflow-hidden">
+      {/* Mobile / Tablet Tab Bar — hidden on lg+ */}
+      <div className="lg:hidden flex-shrink-0 flex bg-[#1e1b4b] border-b border-indigo-900/40">
+        <button
+          onClick={() => setActiveTab("form")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
+            activeTab === "form"
+              ? "text-indigo-200 border-b-2 border-indigo-400"
+              : "text-indigo-500/70 hover:text-indigo-300"
+          }`}
+        >
+          <Edit3 size={15} />
+          Edit
+        </button>
+        <button
+          onClick={() => setActiveTab("preview")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
+            activeTab === "preview"
+              ? "text-indigo-200 border-b-2 border-indigo-400"
+              : "text-indigo-500/70 hover:text-indigo-300"
+          }`}
+        >
+          <FileText size={15} />
+          Preview
+        </button>
       </div>
 
-      {/* Right Panel — 65% */}
-      <div className="w-full lg:w-[65%] xl:w-[70%] h-[55vh] lg:h-full flex flex-col bg-gray-50">
-        {/* Preview area */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8 xl:p-10">
-          <ResumePreview ref={previewRef} />
+      {/* Main content area */}
+      <div className="flex flex-1 min-h-0">
+        {/* Left Panel — Form */}
+        <div
+          className={`${
+            activeTab === "form" ? "flex" : "hidden"
+          } lg:flex w-full lg:w-[35%] xl:w-[30%] flex-shrink-0 flex-col overflow-hidden`}
+        >
+          <LeftForm />
         </div>
 
-        {/* Export button bar */}
-        <div className="p-3 lg:p-4 border-t border-gray-200 bg-white/90 backdrop-blur-sm flex justify-center">
-          <button onClick={openExport} className="btn-export">
-            <Download size={18} />
-            Export Resume
-          </button>
-        </div>
+        {/* Right Panel — Preview */}
+        <div
+          className={`${
+            activeTab === "preview" ? "flex" : "hidden"
+          } lg:flex w-full lg:w-[65%] xl:w-[70%] flex-col bg-gray-50`}
+        >
+          <div className="flex-1 overflow-auto p-3 sm:p-4 lg:p-8 xl:p-10">
+            <ResumePreview ref={previewRef} />
+          </div>
 
-        {/* Export modal */}
-        <ExportModal
-          open={exportOpen}
-          onClose={closeExport}
-          previewRef={previewRef}
-        />
+          {/* Export button bar */}
+          <div className="flex-shrink-0 p-3 lg:p-4 border-t border-gray-200 bg-white/90 backdrop-blur-sm flex justify-center">
+            <button onClick={openExport} className="btn-export">
+              <Download size={18} />
+              Export Resume
+            </button>
+          </div>
+        </div>
       </div>
+
+      <ExportModal
+        open={exportOpen}
+        onClose={closeExport}
+        previewRef={previewRef}
+      />
     </div>
   );
 }

@@ -19,7 +19,12 @@ body {
   background: #eef2f7;
   color: #171717;
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  /* overflow-x hidden prevents horizontal page scroll on mobile;
+     overflow-y is handled per-panel via their own scroll containers */
   overflow: hidden;
+  /* Prevent text size inflation on iOS */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Custom scrollbar */
@@ -286,6 +291,13 @@ body {
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
   transition: all 0.2s;
 }
+@media (max-width: 639px) {
+  .btn-export {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 24px;
+  }
+}
 .btn-export:hover {
   background: #4338ca;
   transform: scale(1.02);
@@ -296,12 +308,22 @@ body {
 
 /* Modal animations */
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .modal-backdrop {
   animation: modalFadeIn 0.2s ease-out;
@@ -337,7 +359,9 @@ body {
 
 /* Loading spinner */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .export-spinner {
   width: 20px;
@@ -347,4 +371,30 @@ body {
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
+}
+
+/* ── Mobile / Tablet responsive tweaks ── */
+
+/* Ensure action buttons don't shrink below minimum usable size */
+@media (max-width: 479px) {
+  .btn-action {
+    padding: 7px 10px;
+    font-size: 12px;
+    gap: 5px;
+  }
+  .btn-action-icon {
+    padding: 7px 10px;
+  }
+  /* iOS: font-size ≥ 16px prevents unwanted zoom-on-focus */
+  .form-input,
+  .form-textarea {
+    font-size: 16px;
+  }
+}
+
+/* Export card: ensure fills width when stacked */
+@media (max-width: 359px) {
+  .export-card {
+    width: 100%;
+  }
 }
