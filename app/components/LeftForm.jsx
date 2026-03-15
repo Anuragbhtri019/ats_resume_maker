@@ -124,7 +124,7 @@ export default function LeftForm() {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        background: "linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%)",
+        background: "#111827",
         color: "#e2e8f0",
       }}
     >
@@ -137,7 +137,7 @@ export default function LeftForm() {
           flexWrap: "wrap",
           gap: "10px",
           padding: "12px 16px",
-          borderBottom: "1px solid rgba(129, 140, 248, 0.15)",
+          borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
         }}
       >
         <button
@@ -301,10 +301,7 @@ export default function LeftForm() {
               return (
                 <Section key={sectionKey} title={label} icon={Icon}>
                   {data.experience.map((exp, i) => (
-                    <div
-                      key={i}
-                      className="section-card space-y-2"
-                    >
+                    <div key={i} className="section-card space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
                           Experience {i + 1}
@@ -429,10 +426,7 @@ export default function LeftForm() {
               return (
                 <Section key={sectionKey} title={label} icon={Icon}>
                   {data.education.map((edu, i) => (
-                    <div
-                      key={i}
-                      className="section-card space-y-2"
-                    >
+                    <div key={i} className="section-card space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
                           Education {i + 1}
@@ -588,10 +582,7 @@ export default function LeftForm() {
               return (
                 <Section key={sectionKey} title={label} icon={Icon}>
                   {(data.projects || []).map((proj, i) => (
-                    <div
-                      key={i}
-                      className="section-card space-y-2"
-                    >
+                    <div key={i} className="section-card space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
                           Project {i + 1}
@@ -664,10 +655,7 @@ export default function LeftForm() {
               return (
                 <Section key={sectionKey} title={label} icon={Icon}>
                   {(data.campaigns || []).map((camp, i) => (
-                    <div
-                      key={i}
-                      className="section-card space-y-2"
-                    >
+                    <div key={i} className="section-card space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
                           Campaign {i + 1}
@@ -771,10 +759,7 @@ export default function LeftForm() {
               return (
                 <Section key={sectionKey} title={label} icon={Icon}>
                   {(data.publications || []).map((pub, i) => (
-                    <div
-                      key={i}
-                      className="section-card space-y-2"
-                    >
+                    <div key={i} className="section-card space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-xs text-white/50">
                           Publication {i + 1}

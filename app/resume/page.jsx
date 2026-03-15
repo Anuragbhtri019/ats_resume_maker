@@ -17,13 +17,13 @@ function ResumeBuilder() {
   return (
     <div className="flex flex-col h-dvh w-screen overflow-hidden">
       {/* Mobile / Tablet Tab Bar — hidden on lg+ */}
-      <div className="lg:hidden flex-shrink-0 flex bg-[#1e1b4b] border-b border-indigo-900/40">
+      <div className="lg:hidden flex-shrink-0 flex bg-slate-900 border-b border-slate-700/60">
         <button
           onClick={() => setActiveTab("form")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
             activeTab === "form"
-              ? "text-indigo-200 border-b-2 border-indigo-400"
-              : "text-indigo-500/70 hover:text-indigo-300"
+              ? "text-slate-100 border-b-2 border-teal-500"
+              : "text-slate-400 hover:text-slate-200"
           }`}
         >
           <Edit3 size={15} />
@@ -33,8 +33,8 @@ function ResumeBuilder() {
           onClick={() => setActiveTab("preview")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-colors ${
             activeTab === "preview"
-              ? "text-indigo-200 border-b-2 border-indigo-400"
-              : "text-indigo-500/70 hover:text-indigo-300"
+              ? "text-slate-100 border-b-2 border-teal-500"
+              : "text-slate-400 hover:text-slate-200"
           }`}
         >
           <FileText size={15} />

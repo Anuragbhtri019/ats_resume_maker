@@ -16,7 +16,7 @@
 }
 
 body {
-  background: #eef2f7;
+  background: #f3f5f9;
   color: #171717;
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   /* overflow-x hidden prevents horizontal page scroll on mobile;
@@ -35,11 +35,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c4b5fd;
+  background: #c3c8d4;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a78bfa;
+  background: #a5adbd;
 }
 
 /* Right panel scrollbar */
@@ -49,13 +49,13 @@ body {
 
 /* ContentEditable focus styles */
 [contenteditable="true"]:focus {
-  outline: 2px solid #a78bfa;
+  outline: 2px solid #94a3b8;
   outline-offset: 2px;
   border-radius: 3px;
-  background: rgba(167, 139, 250, 0.04);
+  background: rgba(148, 163, 184, 0.08);
 }
 [contenteditable="true"]:hover {
-  outline: 1px dashed #c4b5fd;
+  outline: 1px dashed #cbd5e1;
   outline-offset: 2px;
   border-radius: 3px;
 }
@@ -136,36 +136,36 @@ body {
   width: 100%;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(129, 140, 248, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.24);
   font-size: 13px;
-  color: #e2e8f0;
-  background: rgba(30, 27, 75, 0.5);
+  color: #e5e7eb;
+  background: rgba(30, 41, 59, 0.42);
   outline: none;
   transition:
     box-shadow 0.2s,
     border-color 0.2s;
 }
 .form-input:focus {
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
-  border-color: #818cf8;
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.34);
+  border-color: #94a3b8;
 }
 .form-input::placeholder {
-  color: #64748b;
+  color: #9ca3af;
 }
 /* Native select option styling */
 .form-input option {
-  background: #1e1b4b;
-  color: #e2e8f0;
+  background: #1f2937;
+  color: #e5e7eb;
 }
 
 .form-textarea {
   width: 100%;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(129, 140, 248, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.24);
   font-size: 13px;
-  color: #e2e8f0;
-  background: rgba(30, 27, 75, 0.5);
+  color: #e5e7eb;
+  background: rgba(30, 41, 59, 0.42);
   outline: none;
   resize: vertical;
   min-height: 80px;
@@ -174,8 +174,8 @@ body {
     border-color 0.2s;
 }
 .form-textarea:focus {
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
-  border-color: #818cf8;
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.34);
+  border-color: #94a3b8;
 }
 
 /* Add button styling for left panel */
@@ -184,23 +184,23 @@ body {
   align-items: center;
   gap: 4px;
   font-size: 13px;
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
+  background: rgba(148, 163, 184, 0.18);
+  color: #e2e8f0;
   padding: 6px 14px;
   border-radius: 8px;
-  border: 1px solid rgba(129, 140, 248, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.24);
   cursor: pointer;
   transition: background 0.2s;
 }
 .btn-add:hover {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(148, 163, 184, 0.32);
 }
 .btn-add-sm {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #818cf8;
+  color: #cbd5e1;
   background: none;
   border: none;
   cursor: pointer;
@@ -208,7 +208,7 @@ body {
   transition: color 0.2s;
 }
 .btn-add-sm:hover {
-  color: #a5b4fc;
+  color: #f1f5f9;
 }
 
 /* Action bar buttons (Load, Save, Reset) */
@@ -216,35 +216,35 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(99, 102, 241, 0.25);
-  color: #c7d2fe;
+  background: rgba(51, 65, 85, 0.6);
+  color: #e2e8f0;
   padding: 8px 16px;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(129, 140, 248, 0.2);
+  border: 1px solid rgba(148, 163, 184, 0.28);
   cursor: pointer;
   transition: background 0.2s;
 }
 .btn-action:hover {
-  background: rgba(99, 102, 241, 0.4);
+  background: rgba(51, 65, 85, 0.8);
 }
 .btn-action-icon {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(99, 102, 241, 0.25);
-  color: #c7d2fe;
+  background: rgba(51, 65, 85, 0.6);
+  color: #e2e8f0;
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(129, 140, 248, 0.2);
+  border: 1px solid rgba(148, 163, 184, 0.28);
   cursor: pointer;
   transition: background 0.2s;
 }
 .btn-action-icon:hover {
-  background: rgba(99, 102, 241, 0.4);
+  background: rgba(51, 65, 85, 0.8);
 }
 
 /* Section toggle button */
@@ -253,24 +253,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #e0e7ff;
+  color: #f1f5f9;
   font-weight: 600;
   font-size: 13px;
   padding: 10px 14px;
   border-radius: 10px;
-  background: rgba(99, 102, 241, 0.18);
-  border: 1px solid rgba(129, 140, 248, 0.15);
+  background: rgba(51, 65, 85, 0.52);
+  border: 1px solid rgba(148, 163, 184, 0.22);
   cursor: pointer;
   transition: background 0.2s;
 }
 .btn-section-toggle:hover {
-  background: rgba(99, 102, 241, 0.28);
+  background: rgba(71, 85, 105, 0.62);
 }
 
 /* Section entry card */
 .section-card {
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(129, 140, 248, 0.1);
+  background: rgba(51, 65, 85, 0.24);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 10px;
   padding: 12px;
 }
@@ -280,7 +280,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #4f46e5;
+  background: #0f766e;
   color: #fff;
   padding: 12px 40px;
   border-radius: 12px;
@@ -288,7 +288,7 @@ body {
   font-size: 14px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.28);
   transition: all 0.2s;
 }
 @media (max-width: 639px) {
@@ -299,7 +299,7 @@ body {
   }
 }
 .btn-export:hover {
-  background: #4338ca;
+  background: #0d9488;
   transform: scale(1.02);
 }
 .btn-export:active {
@@ -347,10 +347,10 @@ body {
   background: transparent;
 }
 .export-card:hover:not(:disabled) {
-  border-color: #8b5cf6;
-  background: #faf5ff;
+  border-color: #0891b2;
+  background: #f0f9ff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.14);
 }
 .export-card:disabled {
   opacity: 0.5;
@@ -367,7 +367,7 @@ body {
   width: 20px;
   height: 20px;
   border: 2px solid #e5e7eb;
-  border-top-color: #8b5cf6;
+  border-top-color: #0891b2;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
@@ -396,5 +396,24 @@ body {
 @media (max-width: 359px) {
   .export-card {
     width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .btn-action,
+  .btn-action-icon,
+  .btn-section-toggle,
+  .btn-add,
+  .btn-export,
+  .export-card,
+  .form-input,
+  .form-textarea,
+  .section-card {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
   }
 }

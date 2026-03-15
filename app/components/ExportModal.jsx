@@ -105,7 +105,7 @@ export default function ExportModal({ open, onClose, previewRef }) {
         </div>
 
         {exporting && (
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-purple-600">
+          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-cyan-700">
             <span className="export-spinner" />
             Generating file...
           </div>
