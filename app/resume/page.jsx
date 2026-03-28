@@ -48,7 +48,7 @@ function ResumeBuilder() {
         <div
           className={`${
             activeTab === "form" ? "flex" : "hidden"
-          } lg:flex w-full lg:w-[35%] xl:w-[30%] flex-shrink-0 flex-col overflow-hidden`}
+          } lg:flex w-full lg:w-[40%] xl:w-[40%] flex-shrink-0 flex-col overflow-hidden`}
         >
           <LeftForm />
         </div>
@@ -57,7 +57,7 @@ function ResumeBuilder() {
         <div
           className={`${
             activeTab === "preview" ? "flex" : "hidden"
-          } lg:flex w-full lg:w-[65%] xl:w-[70%] flex-col bg-gray-50`}
+          } lg:flex w-full lg:w-[60%] xl:w-[60%] flex-col bg-gray-50`}
         >
           <div className="flex-1 overflow-auto p-3 sm:p-4 lg:p-8 xl:p-10">
             <ResumePreview ref={previewRef} />
