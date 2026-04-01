@@ -207,7 +207,8 @@ const ResumePreview = forwardRef(function ResumePreview(props, ref) {
               fontSize: "10pt",
               lineHeight: "1.45",
               color: "#111827",
-              boxShadow: "0 4px 30px rgba(0,0,0,0.10)",
+              boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
+              borderRadius: "2px",
             }}
           >
             {/* Watermark */}

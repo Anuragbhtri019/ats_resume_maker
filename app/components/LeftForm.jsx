@@ -124,7 +124,7 @@ export default function LeftForm() {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        background: "#111827",
+        background: "linear-gradient(to bottom, #0f172a 0%, #1e293b 100%)",
         color: "#e2e8f0",
       }}
     >
@@ -135,9 +135,11 @@ export default function LeftForm() {
           alignItems: "center",
           justifyContent: "center",
           flexWrap: "wrap",
-          gap: "10px",
-          padding: "12px 16px",
+          gap: "12px",
+          padding: "14px 16px",
           borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
+          background: "rgba(15, 23, 42, 0.5)",
+          backdropFilter: "blur(10px)",
         }}
       >
         <button
@@ -168,7 +170,7 @@ export default function LeftForm() {
       </div>
 
       {/* Scrollable form area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
         {/* Template selector */}
         <TemplateSelector />
 
