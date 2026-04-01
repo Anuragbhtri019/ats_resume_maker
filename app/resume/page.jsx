@@ -15,9 +15,9 @@ function ResumeBuilder() {
   const closeExport = useCallback(() => setExportOpen(false), []);
 
   return (
-    <div className="flex flex-col h-dvh w-screen overflow-hidden bg-gradient-to-br from-slate-50 via-slate-50 to-blue-50">
+    <div className="flex h-dvh w-screen flex-col gap-3 overflow-hidden bg-gradient-to-br from-slate-50 via-slate-50 to-blue-50 p-3 sm:gap-4 sm:p-4 lg:p-6">
       {/* Header */}
-      <div className="flex-shrink-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50 shadow-lg">
+      <div className="flex-shrink-0 overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/50 shadow-lg">
         <div className="max-w-full px-4 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg">
@@ -35,7 +35,7 @@ function ResumeBuilder() {
       </div>
 
       {/* Mobile / Tablet Tab Bar — hidden on lg+ */}
-      <div className="lg:hidden flex-shrink-0 flex bg-white border-b border-slate-200 shadow-sm">
+      <div className="lg:hidden flex-shrink-0 overflow-hidden rounded-2xl flex bg-white border border-slate-200 shadow-sm">
         <button
           onClick={() => setActiveTab("form")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold transition-all ${
@@ -60,22 +60,21 @@ function ResumeBuilder() {
         </button>
       </div>
 
-      {/* Main content area */}
-      <div className="flex flex-1 min-h-0 gap-0">
+      <div className="flex flex-1 min-h-0 gap-3 sm:gap-4">
         {/* Left Panel — Form */}
         <div
-          className={`${
+          className={`$
             activeTab === "form" ? "flex" : "hidden"
-          } lg:flex w-full lg:w-[38%] flex-shrink-0 flex-col overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800 shadow-xl`}
+          } lg:flex w-full lg:w-[42%] xl:w-[40%] min-w-[420px] flex-shrink-0 flex-col overflow-hidden rounded-2xl border border-slate-700/40 bg-gradient-to-b from-slate-900 to-slate-800 shadow-2xl`}
         >
           <LeftForm />
         </div>
 
         {/* Right Panel — Preview */}
         <div
-          className={`${
+          className={`$
             activeTab === "preview" ? "flex" : "hidden"
-          } lg:flex w-full lg:w-[62%] flex-col bg-white shadow-lg`}
+          } lg:flex w-full lg:w-[58%] xl:w-[60%] min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl`}
         >
           <div className="flex-1 overflow-auto p-3 sm:p-6 lg:p-10 bg-gradient-to-br from-slate-50 to-blue-50">
             <ResumePreview ref={previewRef} />

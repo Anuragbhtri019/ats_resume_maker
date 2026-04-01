@@ -135,8 +135,8 @@ export default function LeftForm() {
           alignItems: "center",
           justifyContent: "center",
           flexWrap: "wrap",
-          gap: "12px",
-          padding: "14px 16px",
+          gap: "10px",
+          padding: "16px 18px",
           borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
           background: "rgba(15, 23, 42, 0.5)",
           backdropFilter: "blur(10px)",
@@ -170,13 +170,13 @@ export default function LeftForm() {
       </div>
 
       {/* Scrollable form area */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
         {/* Template selector */}
         <TemplateSelector />
 
         {/* Personal Information */}
         <Section title="Personal Information" icon={User}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <input
               className="form-input"
               placeholder="Full Name"
@@ -190,7 +190,7 @@ export default function LeftForm() {
               onChange={(e) => updateField("personal.title", e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <input
               className="form-input"
               placeholder="Phone"
@@ -204,7 +204,7 @@ export default function LeftForm() {
               onChange={(e) => updateField("personal.email", e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <input
               className="form-input"
               placeholder="Location"
