@@ -17,21 +17,30 @@ function ResumeBuilder() {
   return (
     <div className="flex h-dvh w-screen flex-col gap-3 overflow-hidden bg-gradient-to-br from-slate-50 via-slate-50 to-blue-50 p-3 sm:gap-4 sm:p-4 lg:p-6">
       {/* Header */}
-      <div className="flex-shrink-0 overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/50 shadow-lg">
-        <div className="max-w-full px-4 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg">
+      <div className="flex-shrink-0 relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/50 shadow-lg">
+        <div className="max-w-full px-4 lg:px-8 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg flex-shrink-0">
               <FileJson size={22} className="text-white" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">ATS Resume</h1>
-              <p className="text-xs text-slate-400 hidden sm:block">Professional Resume Builder</p>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold text-white tracking-tight leading-tight">
+                ATS Resume
+              </h1>
+              <p className="text-xs text-slate-300 hidden sm:block leading-tight">
+                Professional Resume Builder
+              </p>
             </div>
           </div>
-          <div className="text-right hidden md:block">
-            <p className="text-xs text-slate-400">Create ATS-friendly resumes</p>
-          </div>
+
+          <p className="hidden md:block text-right text-xs text-slate-300 leading-tight max-w-[220px]">
+            Create ATS-friendly resumes
+          </p>
         </div>
+
+        <p className="absolute right-4 bottom-1 text-[11px] leading-none text-slate-200/85">
+          © Anurag Bhattarai
+        </p>
       </div>
 
       {/* Mobile / Tablet Tab Bar — hidden on lg+ */}
